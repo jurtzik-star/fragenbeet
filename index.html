@@ -1,0 +1,652 @@
+<title>Fragenbeet</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --bg:#F6F7F0;
+    --surface:#FFFFFF;
+    --surface-2:#EEF1E4;
+    --ink:#1E2A20;
+    --ink-muted:#5C6C58;
+    --border:#DBE1CD;
+    --accent:#3B6B45;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#E3EEDA;
+    --gold:#B97A1F;
+    --gold-soft:#F6E7CC;
+    --shadow: 0 1px 2px rgba(30,42,32,.05), 0 8px 24px -12px rgba(30,42,32,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121712;
+      --surface:#1A211A;
+      --surface-2:#212B20;
+      --ink:#E9EEE2;
+      --ink-muted:#9DAE96;
+      --border:#2E3A2C;
+      --accent:#74AC7C;
+      --accent-ink:#0E140F;
+      --accent-soft:#22301F;
+      --gold:#E3AD56;
+      --gold-soft:#392C15;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121712;
+    --surface:#1A211A;
+    --surface-2:#212B20;
+    --ink:#E9EEE2;
+    --ink-muted:#9DAE96;
+    --border:#2E3A2C;
+    --accent:#74AC7C;
+    --accent-ink:#0E140F;
+    --accent-soft:#22301F;
+    --gold:#E3AD56;
+    --gold-soft:#392C15;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -14px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    line-height:1.45;
+  }
+  main{
+    max-width:1040px;
+    margin:0 auto;
+    padding:2.25rem 1.25rem 4rem;
+  }
+  h1,h2,h3{ text-wrap:balance; font-family:'Fraunces', Georgia, serif; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, Menlo, monospace; }
+  a{ color:inherit; }
+  button{ font-family:inherit; cursor:pointer; }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+  svg.icon{ width:1em; height:1em; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+
+  /* header */
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.72rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+    display:flex; align-items:center; gap:.5rem;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--gold); }
+  header h1{
+    font-size:clamp(2.1rem, 1.5rem + 2.2vw, 3.1rem);
+    font-weight:600;
+    margin-top:.3rem;
+    display:flex; align-items:center; gap:.55rem;
+  }
+  header h1 svg.icon{ color:var(--accent); width:.8em; height:.8em; }
+  .subhead{
+    color:var(--ink-muted);
+    font-size:1.02rem;
+    max-width:56ch;
+    margin-top:.6rem;
+  }
+
+  /* process strip */
+  .process{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.75rem;
+    margin-top:1.75rem;
+  }
+  .process li{
+    list-style:none;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:.85rem .95rem;
+    display:flex; gap:.65rem; align-items:flex-start;
+  }
+  .process .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.75rem;
+    font-weight:600;
+    color:var(--accent);
+    background:var(--accent-soft);
+    width:1.4rem; height:1.4rem;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; margin-top:.05rem;
+  }
+  .process p{ margin:0; font-size:.86rem; color:var(--ink-muted); }
+  .process strong{ display:block; font-size:.88rem; color:var(--ink); font-weight:600; margin-bottom:.1rem; }
+
+  /* banner */
+  .banner{
+    margin-top:1.5rem;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+    background:var(--gold-soft);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:.6rem .9rem;
+    font-size:.85rem;
+    color:var(--ink);
+  }
+  .banner .left{ display:flex; align-items:center; gap:.55rem; }
+  .banner svg.icon{ color:var(--gold); }
+  .banner button{
+    background:none; border:1px solid var(--border); border-radius:7px;
+    padding:.3rem .65rem; font-size:.78rem; color:var(--ink-muted);
+    display:flex; align-items:center; gap:.35rem;
+  }
+  .banner button:hover{ color:var(--ink); border-color:var(--ink-muted); }
+
+  /* role toggle */
+  .roles{
+    margin-top:2rem;
+    display:inline-flex;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:.25rem;
+    gap:.2rem;
+  }
+  .roles button{
+    border:none; background:none; padding:.5rem 1.05rem; border-radius:999px;
+    font-size:.86rem; font-weight:600; color:var(--ink-muted);
+    display:flex; align-items:center; gap:.4rem;
+  }
+  .roles button[aria-pressed="true"]{
+    background:var(--surface); color:var(--ink); box-shadow:var(--shadow);
+  }
+
+  section.view{ margin-top:1.75rem; }
+
+  /* ask box */
+  .ask{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:1.1rem;
+    box-shadow:var(--shadow);
+  }
+  .ask label{ font-size:.82rem; font-weight:600; color:var(--ink-muted); display:block; margin-bottom:.45rem; }
+  .ask-row{ display:flex; gap:.6rem; }
+  .ask-row input{
+    flex:1;
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--ink);
+    border-radius:9px;
+    padding:.65rem .8rem;
+    font-size:.95rem;
+    font-family:inherit;
+  }
+  .ask-row input:focus-visible{ outline-offset:0; }
+  .ask-row button{
+    background:var(--accent); color:var(--accent-ink); border:none;
+    border-radius:9px; padding:.65rem 1.05rem; font-weight:600; font-size:.92rem;
+    display:flex; align-items:center; gap:.4rem; white-space:nowrap;
+  }
+  .ask-row button:hover{ filter:brightness(1.06); }
+  .hints{ margin-top:.7rem; display:flex; flex-wrap:wrap; gap:.4rem; }
+  .hint{
+    border:1px dashed var(--border); background:transparent; color:var(--ink-muted);
+    font-size:.78rem; padding:.3rem .6rem; border-radius:999px;
+  }
+  .hint:hover{ border-color:var(--accent); color:var(--accent); }
+
+  .result{
+    margin-top:.9rem; padding:.9rem 1rem; border-radius:10px;
+    display:flex; gap:.65rem; align-items:flex-start; font-size:.9rem;
+  }
+  .result.found{ background:var(--accent-soft); }
+  .result.new{ background:var(--gold-soft); }
+  .result svg.icon{ margin-top:.15rem; }
+  .result.found svg.icon{ color:var(--accent); }
+  .result.new svg.icon{ color:var(--gold); }
+  .result strong{ display:block; margin-bottom:.15rem; }
+
+  /* filters */
+  .filters{ margin-top:1.6rem; display:flex; flex-wrap:wrap; gap:.45rem; }
+  .filter{
+    border:1px solid var(--border); background:var(--surface); color:var(--ink-muted);
+    border-radius:999px; padding:.4rem .8rem .4rem .6rem; font-size:.82rem; font-weight:500;
+    display:flex; align-items:center; gap:.4rem;
+  }
+  .filter svg.icon{ width:.95em; height:.95em; }
+  .filter[aria-pressed="true"]{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+
+  /* faq grid */
+  .grid{
+    margin-top:1.1rem;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+    gap:.85rem;
+    align-items:start;
+  }
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:1rem 1.05rem 1.05rem; display:flex; flex-direction:column; gap:.55rem;
+  }
+  .tag{
+    align-self:flex-start;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.68rem; font-weight:600; letter-spacing:.03em; text-transform:uppercase;
+    color:var(--accent); background:var(--accent-soft);
+    padding:.32rem .55rem .55rem;
+    display:flex; align-items:center; gap:.35rem;
+    clip-path:polygon(0 0, 100% 0, 100% 62%, 50% 100%, 0 62%);
+  }
+  .card h3{ font-family:'Figtree'; font-size:1.02rem; font-weight:700; line-height:1.3; }
+  .card p{ margin:0; color:var(--ink-muted); font-size:.9rem; line-height:1.55; }
+  .card .meta{
+    margin-top:auto; padding-top:.5rem; border-top:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:.75rem; color:var(--ink-muted);
+  }
+  .meta .count{ display:flex; align-items:center; gap:.3rem; font-family:'IBM Plex Mono', monospace; font-variant-numeric:tabular-nums; }
+  .card-actions{ display:flex; gap:.3rem; }
+  .icon-btn{
+    background:none; border:1px solid var(--border); border-radius:7px; padding:.3rem;
+    color:var(--ink-muted); display:flex;
+  }
+  .icon-btn:hover{ color:var(--ink); border-color:var(--ink-muted); }
+
+  .empty{
+    text-align:center; padding:2.2rem 1rem; color:var(--ink-muted); font-size:.9rem;
+    border:1px dashed var(--border); border-radius:12px;
+  }
+  .empty svg.icon{ width:1.6rem; height:1.6rem; color:var(--accent); margin-bottom:.5rem; }
+
+  /* stats */
+  .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; }
+  .stat{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:.9rem 1rem; display:flex; flex-direction:column; gap:.25rem;
+  }
+  .stat .num{ font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:1.6rem; font-variant-numeric:tabular-nums; color:var(--ink); }
+  .stat .label{ font-size:.78rem; color:var(--ink-muted); display:flex; align-items:center; gap:.35rem; }
+
+  .queue{ margin-top:1.5rem; display:flex; flex-direction:column; gap:.75rem; }
+  .qcard{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1rem 1.1rem;
+  }
+  .qcard .qtop{ display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; }
+  .qcard h4{ margin:0; font-family:'Figtree'; font-size:.98rem; font-weight:700; }
+  .qcard .qmeta{ font-size:.75rem; color:var(--ink-muted); margin-top:.2rem; display:flex; gap:.6rem; }
+  .qform{ margin-top:.85rem; display:grid; gap:.55rem; }
+  .qform select, .qform textarea{
+    border:1px solid var(--border); background:var(--bg); color:var(--ink);
+    border-radius:8px; padding:.55rem .7rem; font-family:inherit; font-size:.88rem; width:100%;
+  }
+  .qform textarea{ min-height:4.5rem; resize:vertical; }
+  .qform-row{ display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+  .qform-row select{ flex:1; min-width:180px; }
+  .publish-btn{
+    background:var(--accent); color:var(--accent-ink); border:none; border-radius:8px;
+    padding:.55rem .95rem; font-weight:600; font-size:.86rem; display:flex; align-items:center; gap:.4rem;
+  }
+  .publish-btn:disabled{ opacity:.45; cursor:not-allowed; }
+
+  h2.section-title{
+    font-size:1.15rem; font-weight:600; display:flex; align-items:center; gap:.5rem; margin-top:2rem;
+  }
+  h2.section-title svg.icon{ color:var(--accent); }
+  .section-sub{ font-size:.82rem; color:var(--ink-muted); margin-top:.2rem; }
+
+  footer{
+    margin-top:3rem; padding-top:1.25rem; border-top:1px solid var(--border);
+    font-size:.8rem; color:var(--ink-muted); max-width:62ch;
+  }
+
+  @media (max-width:640px){
+    .process{ grid-template-columns:1fr; }
+    .stats{ grid-template-columns:1fr; }
+  }
+
+  @media (prefers-reduced-motion: no-preference){
+    .card, .qcard{ transition:border-color .15s ease; }
+  }
+</style>
+
+<main>
+  <div class="eyebrow"><span class="dot"></span> Landesgartenschau 2028 · Team-Einarbeitung</div>
+  <header>
+    <h1 id="icon-sprout-h"><svg class="icon" id="icon-sprout-slot" viewBox="0 0 24 24"></svg> Fragenbeet</h1>
+    <p class="subhead">Eine Wissensbasis für neue Mitarbeiter, die mit jeder gestellten Frage weiterwächst — statt dass dieselben Fragen immer wieder einzeln beantwortet werden müssen.</p>
+  </header>
+
+  <ul class="process">
+    <li><span class="num">1</span><div><strong>Frage stellen</strong><p>Ein neues Teammitglied fragt, wie es sonst dich fragen würde.</p></div></li>
+    <li><span class="num">2</span><div><strong>Einmal beantworten</strong><p>Ist die Antwort neu, klärt sie das Team einmal kurz.</p></div></li>
+    <li><span class="num">3</span><div><strong>Für alle nutzbar</strong><p>Die Antwort wächst ins Beet — die nächste Person findet sie sofort.</p></div></li>
+  </ul>
+
+  <div class="banner">
+    <div class="left"><svg class="icon" id="icon-info-slot" viewBox="0 0 24 24"></svg> Klick-Prototyp mit Beispielinhalten — läuft lokal in diesem Browser.</div>
+    <button id="resetBtn"><svg class="icon" id="icon-reset-slot" viewBox="0 0 24 24"></svg> Demo zurücksetzen</button>
+  </div>
+
+  <div class="roles" role="group" aria-label="Ansicht wählen">
+    <button id="roleMitarbeiter" aria-pressed="true"><svg class="icon" viewBox="0 0 24 24" id="icon-role-m"></svg> Mitarbeiter-Ansicht</button>
+    <button id="roleTeam" aria-pressed="false"><svg class="icon" viewBox="0 0 24 24" id="icon-role-t"></svg> Team-Ansicht</button>
+  </div>
+
+  <section id="viewMitarbeiter" class="view"></section>
+  <section id="viewTeam" class="view" hidden></section>
+
+  <footer>
+    Fragenbeet ist ein erster Entwurf, um die Idee auszuprobieren. In der echten Version würden Fragen aus dem laufenden Betrieb gesammelt und im Team freigegeben — bereit für die heiße Phase vor Eröffnung.
+  </footer>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- icons (small, hand-authored, single style) ---------- */
+  var ICONS = {
+    sprout:'<path d="M7 20c0-5 3-8 8-8"/><path d="M7 20c0-3-1.5-5-4-6 0 4 1.5 6 4 6Z"/><path d="M11 12c0-4 2-6.5 6-7-1 4-2 6-6 7Z"/>',
+    info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>',
+    refresh:'<path d="M20 11a8 8 0 0 0-14.9-3.5"/><path d="M4 13a8 8 0 0 0 14.9 3.5"/><path d="M4 4v5h5"/><path d="M20 20v-5h-5"/>',
+    user:'<circle cx="12" cy="8" r="3.3"/><path d="M5 20c1.2-4 4-6 7-6s5.8 2 7 6"/>',
+    users:'<circle cx="9" cy="8" r="3"/><path d="M3.5 19c1-3.2 3-5 5.5-5s4.5 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M15 14.3c2 .2 3.4 1.8 4.2 4.7"/>',
+    search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5"/>',
+    send:'<path d="M4 12l16-8-6 16-3-6-7-2Z"/>',
+    check:'<path d="M4 12.5l5 5L20 6"/>',
+    plant:'<path d="M12 21V9"/><path d="M12 9C7 9 5 6 5 3c4 0 7 2 7 6Z"/><path d="M12 12c4-1 7-3.5 7-7-4 0-6.5 2-7 5"/>',
+    clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+    mapPin:'<path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.4"/>',
+    ticket:'<path d="M3 9a2 2 0 0 1 0-4h18a2 2 0 0 1 0 4 2 2 0 0 0 0 4 2 2 0 0 1 0 4H3a2 2 0 0 1 0-4 2 2 0 0 0 0-4Z"/><path d="M10 5v14" stroke-dasharray="2.2 2.2"/>',
+    utensils:'<path d="M6 3v7a2 2 0 0 0 4 0V3"/><path d="M8 10v11"/><path d="M16 3c-1.4 0-2.5 1.6-2.5 5s1.1 4 2.5 4 2.5-.6 2.5-4-1.1-5-2.5-5Z"/><path d="M16 12v9"/>',
+    shield:'<path d="M12 3l7 3v5.5c0 4.6-3 7.7-7 9.5-4-1.8-7-4.9-7-9.5V6Z"/><path d="M9.3 12l1.9 1.9L15 10"/>',
+    shirt:'<path d="M8 4 4 6.5 6 10l2-1v11h8V9l2 1 2-3.5L16 4c0 1.7-1.8 3-4 3s-4-1.3-4-3Z"/>',
+    plus:'<path d="M12 5v14"/><path d="M5 12h14"/>',
+    pencil:'<path d="M4 20l.9-4L16 4.9a1.5 1.5 0 0 1 2.1 0l1 1a1.5 1.5 0 0 1 0 2.1L8 19l-4 1Z"/>',
+    trash:'<path d="M5 7h14"/><path d="M9 7V4.8c0-.4.4-.8.9-.8h4.2c.5 0 .9.4.9.8V7"/><path d="M7 7l1 13h8l1-13"/>'
+  };
+  function icon(name){ return '<svg class="icon" viewBox="0 0 24 24">'+ICONS[name]+'</svg>'; }
+  function fillSlot(id, name){ var el=document.getElementById(id); if(el) el.outerHTML = icon(name); }
+
+  /* ---------- categories ---------- */
+  var CATS = [
+    {key:'zeiten',     label:'Arbeitszeiten & Schichten',  icon:'clock'},
+    {key:'gelaende',   label:'Gelände & Orientierung',     icon:'mapPin'},
+    {key:'kasse',      label:'Kasse & Ticketing',          icon:'ticket'},
+    {key:'pausen',     label:'Pausen & Verpflegung',       icon:'utensils'},
+    {key:'sicherheit', label:'Sicherheit & Notfall',       icon:'shield'},
+    {key:'uniform',    label:'Uniform & Material',         icon:'shirt'},
+    {key:'team',       label:'Ansprechpartner & Team',     icon:'users'}
+  ];
+  function catMeta(key){ return CATS.find(function(c){return c.key===key;}) || {label:key, icon:'plant'}; }
+
+  /* ---------- seed data ---------- */
+  var SEED = {
+    faqs:[
+      {id:'f1', category:'zeiten', question:'Wann beginnt und endet meine Schicht?', answer:'Die meisten Schichten laufen von 8:00–16:30 Uhr oder 12:00–20:30 Uhr, je nach Einsatzbereich. Deinen genauen Dienstplan findest du eine Woche im Voraus am Infopoint ausgehängt.', askedCount:14, dateLabel:'12. Aug 2026'},
+      {id:'f2', category:'zeiten', question:'Was mache ich, wenn ich krank bin und meine Schicht nicht antreten kann?', answer:'Bitte so früh wie möglich telefonisch bei der Schichtleitung melden — die Nummer steht auf der Rückseite deines Dienstausweises.', askedCount:9, dateLabel:'14. Aug 2026'},
+      {id:'f3', category:'gelaende', question:'Wo ist der Eingang für Mitarbeiter?', answer:'Über den separaten Mitarbeiterzugang, ausgeschildert und getrennt vom Besuchereingang. Dienstausweis bitte sichtbar tragen.', askedCount:11, dateLabel:'15. Aug 2026'},
+      {id:'f4', category:'gelaende', question:'Wo finde ich einen Lageplan des Geländes?', answer:'Am Infopoint als Aushang und in der Team-App unter „Gelände“. Die Beet-Nummern helfen bei der Orientierung.', askedCount:6, dateLabel:'18. Aug 2026'},
+      {id:'f5', category:'kasse', question:'Wie funktioniert das Kassensystem an den Ständen?', answer:'Am ersten Einsatztag gibt es eine kurze Einweisung. Karte und Bar sind beide möglich, Stornos bitte nur mit der Schichtleitung.', askedCount:8, dateLabel:'20. Aug 2026'},
+      {id:'f6', category:'pausen', question:'Wie lang sind meine Pausen und wo kann ich essen?', answer:'Ab 6 Stunden Einsatz gibt es 30 Minuten Pause. Der Personalraum liegt hinter dem Infopoint, Getränke werden gestellt.', askedCount:13, dateLabel:'21. Aug 2026'},
+      {id:'f7', category:'sicherheit', question:'Was mache ich bei einem Unfall oder Notfall?', answer:'Die nächste Erste-Hilfe-Station findest du auf dem Lageplan markiert. Notfälle immer sofort über Funkgerät oder die nächste Sicherheitskraft melden.', askedCount:10, dateLabel:'22. Aug 2026'},
+      {id:'f8', category:'uniform', question:'Wo bekomme ich meine Arbeitskleidung?', answer:'Ausgabe in der Kleiderkammer am ersten Arbeitstag, gegen Pfand. Waschen übernimmst du selbst, Größen können getauscht werden.', askedCount:7, dateLabel:'25. Aug 2026'},
+      {id:'f9', category:'team', question:'Wer ist meine Ansprechperson vor Ort?', answer:'Deine Schichtleitung — erkennbar an der grünen Weste. Wer das an welchem Tag ist, steht auf dem Dienstplan.', askedCount:5, dateLabel:'27. Aug 2026'}
+    ],
+    queue:[
+      {id:'q1', question:'Darf ich mein privates Handy während der Schicht dabei haben?', dateLabel:'02. Sep 2026', askedCount:3},
+      {id:'q2', question:'Wo gebe ich Fundsachen von Besuchern ab?', dateLabel:'03. Sep 2026', askedCount:1}
+    ]
+  };
+
+  var STORE_KEY = 'fragenbeet_v1';
+  var state = loadState();
+
+  function loadState(){
+    try{
+      var raw = localStorage.getItem(STORE_KEY);
+      if(raw){ return JSON.parse(raw); }
+    }catch(e){}
+    return JSON.parse(JSON.stringify(SEED));
+  }
+  function saveState(){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  /* ---------- matching ---------- */
+  var STOP = ['der','die','das','und','oder','ist','wie','was','wo','wann','darf','ich','mein','meine','meinen',
+    'fur','für','bei','am','im','in','zu','ein','eine','einen','kann','habe','hab','auf','mit','sind','wird',
+    'werden','soll','muss','gibt','es','sie','du','dein','deine','man','als','so','noch','auch','mir','dir','den','dem'];
+
+  function normalize(str){
+    return str.toLowerCase()
+      .replace(/[äöüß]/g, function(c){ return {'ä':'a','ö':'o','ü':'u','ß':'ss'}[c]; })
+      .replace(/[^a-z0-9\s]/g,' ')
+      .split(/\s+/).filter(Boolean);
+  }
+  function tokens(str){ return normalize(str).filter(function(t){ return t.length>2 && STOP.indexOf(t)===-1; }); }
+
+  function findMatch(query){
+    var q = tokens(query);
+    if(!q.length) return null;
+    var best=null, bestScore=0;
+    state.faqs.forEach(function(f){
+      var pool = tokens(f.question+' '+f.answer+' '+catMeta(f.category).label);
+      var score = q.filter(function(t){ return pool.indexOf(t)!==-1; }).length;
+      if(score>bestScore){ bestScore=score; best=f; }
+    });
+    return bestScore>=1 ? best : null;
+  }
+  function findQueueMatch(query){
+    var qn = normalize(query).join(' ');
+    return state.queue.find(function(item){ return normalize(item.question).join(' ')===qn; });
+  }
+  function todayLabel(){
+    return new Intl.DateTimeFormat('de-DE',{day:'2-digit',month:'short',year:'numeric'}).format(new Date());
+  }
+  function uid(prefix){ return prefix+'-'+Math.random().toString(36).slice(2,8); }
+
+  /* ---------- render: mitarbeiter ---------- */
+  var activeFilter = 'alle';
+  var lastResult = null;
+
+  function renderMitarbeiter(){
+    var el = document.getElementById('viewMitarbeiter');
+    var faqs = state.faqs.filter(function(f){ return activeFilter==='alle' || f.category===activeFilter; });
+    faqs.sort(function(a,b){ return b.askedCount - a.askedCount; });
+
+    var html = '';
+    html += '<div class="ask">';
+    html += '<label for="askInput">Was möchtest du wissen?</label>';
+    html += '<div class="ask-row"><input id="askInput" type="text" placeholder="z. B. Wann beginnt meine Schicht?" autocomplete="off">';
+    html += '<button id="askBtn">'+icon('send')+' Fragen</button></div>';
+    html += '<div class="hints">';
+    ['Wann beginnt meine Schicht?','Wo bekomme ich meine Arbeitskleidung?','Was mache ich bei einem Unfall?','Darf ich mein Handy mitnehmen?'].forEach(function(h){
+      html += '<button class="hint" data-hint="'+h.replace(/"/g,'&quot;')+'">'+h+'</button>';
+    });
+    html += '</div>';
+    if(lastResult){
+      if(lastResult.type==='found'){
+        html += '<div class="result found">'+icon('check')+'<div><strong>Gefunden im Beet</strong>'+lastResult.faq.answer+'</div></div>';
+      } else {
+        html += '<div class="result new">'+icon('plant')+'<div><strong>Neu gepflanzt</strong>Diese Frage ist noch nicht im Beet — sie wandert ins Team-Postfach und wächst bald zu einer Antwort heran.</div></div>';
+      }
+    }
+    html += '</div>';
+
+    html += '<div class="filters">';
+    html += '<button class="filter" data-cat="alle" aria-pressed="'+(activeFilter==='alle')+'">Alle</button>';
+    CATS.forEach(function(c){
+      html += '<button class="filter" data-cat="'+c.key+'" aria-pressed="'+(activeFilter===c.key)+'">'+icon(c.icon)+c.label+'</button>';
+    });
+    html += '</div>';
+
+    html += '<div class="grid">';
+    if(!faqs.length){
+      html += '<div class="empty" style="grid-column:1/-1">'+icon('plant')+'<div>Für diese Kategorie ist noch nichts im Beet gewachsen.</div></div>';
+    } else {
+      faqs.forEach(function(f){ html += faqCard(f,false); });
+    }
+    html += '</div>';
+
+    el.innerHTML = html;
+
+    document.getElementById('askBtn').addEventListener('click', submitQuestion);
+    document.getElementById('askInput').addEventListener('keydown', function(e){ if(e.key==='Enter') submitQuestion(); });
+    el.querySelectorAll('.hint').forEach(function(b){
+      b.addEventListener('click', function(){
+        document.getElementById('askInput').value = b.getAttribute('data-hint');
+        submitQuestion();
+      });
+    });
+    el.querySelectorAll('.filter').forEach(function(b){
+      b.addEventListener('click', function(){ activeFilter = b.getAttribute('data-cat'); renderMitarbeiter(); });
+    });
+  }
+
+  function submitQuestion(){
+    var input = document.getElementById('askInput');
+    var q = input.value.trim();
+    if(!q) return;
+    var match = findMatch(q);
+    if(match){
+      match.askedCount++;
+      lastResult = {type:'found', faq:match};
+    } else {
+      var existing = findQueueMatch(q);
+      if(existing){ existing.askedCount++; }
+      else { state.queue.push({id:uid('q'), question:q, dateLabel:todayLabel(), askedCount:1}); }
+      lastResult = {type:'new'};
+    }
+    saveState();
+    input.value='';
+    renderMitarbeiter();
+  }
+
+  function faqCard(f, editable){
+    var meta = catMeta(f.category);
+    var html = '<div class="card">';
+    html += '<div class="tag">'+icon(meta.icon)+meta.label+'</div>';
+    html += '<h3>'+escapeHtml(f.question)+'</h3>';
+    html += '<p>'+escapeHtml(f.answer)+'</p>';
+    html += '<div class="meta"><span class="count">'+icon('users')+' '+f.askedCount+'× gefragt</span>';
+    if(editable){
+      html += '<span class="card-actions"><button class="icon-btn" data-del="'+f.id+'" aria-label="Löschen">'+icon('trash')+'</button></span>';
+    } else {
+      html += '<span>'+f.dateLabel+'</span>';
+    }
+    html += '</div></div>';
+    return html;
+  }
+
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+
+  /* ---------- render: team ---------- */
+  function renderTeam(){
+    var el = document.getElementById('viewTeam');
+    var html = '';
+    html += '<div class="stats">';
+    html += '<div class="stat"><span class="num">'+state.queue.length+'</span><span class="label">'+icon('search')+' Offene Fragen</span></div>';
+    html += '<div class="stat"><span class="num">'+state.faqs.length+'</span><span class="label">'+icon('sprout')+' Im Beet</span></div>';
+    html += '<div class="stat"><span class="num">'+CATS.length+'</span><span class="label">'+icon('plant')+' Kategorien</span></div>';
+    html += '</div>';
+
+    html += '<h2 class="section-title">'+icon('search')+' Offene Fragen</h2>';
+    html += '<div class="section-sub">Einmal beantworten — die Antwort steht danach im Beet für alle bereit.</div>';
+    html += '<div class="queue">';
+    if(!state.queue.length){
+      html += '<div class="empty">'+icon('check')+'<div>Keine offenen Fragen. Alles beantwortet.</div></div>';
+    } else {
+      state.queue.forEach(function(q){
+        html += '<div class="qcard" data-qid="'+q.id+'">';
+        html += '<div class="qtop"><h4>'+escapeHtml(q.question)+'</h4></div>';
+        html += '<div class="qmeta"><span>seit '+q.dateLabel+'</span><span>'+q.askedCount+'× gefragt</span></div>';
+        html += '<div class="qform">';
+        html += '<div class="qform-row"><select class="qcat"><option value="">Kategorie wählen…</option>';
+        CATS.forEach(function(c){ html += '<option value="'+c.key+'">'+c.label+'</option>'; });
+        html += '</select></div>';
+        html += '<textarea class="qanswer" placeholder="Antwort eingeben…"></textarea>';
+        html += '<div><button class="publish-btn" disabled>'+icon('plus')+' Antwort veröffentlichen</button></div>';
+        html += '</div></div>';
+      });
+    }
+    html += '</div>';
+
+    html += '<h2 class="section-title">'+icon('sprout')+' Im Beet</h2>';
+    html += '<div class="section-sub">Bereits gewachsene Antworten — hier direkt bearbeitbar.</div>';
+    html += '<div class="grid">';
+    if(!state.faqs.length){
+      html += '<div class="empty" style="grid-column:1/-1">Noch nichts im Beet.</div>';
+    } else {
+      state.faqs.slice().sort(function(a,b){return b.askedCount-a.askedCount;}).forEach(function(f){ html += faqCard(f, true); });
+    }
+    html += '</div>';
+
+    el.innerHTML = html;
+
+    el.querySelectorAll('.qcard').forEach(function(card){
+      var id = card.getAttribute('data-qid');
+      var sel = card.querySelector('.qcat');
+      var ta = card.querySelector('.qanswer');
+      var btn = card.querySelector('.publish-btn');
+      function refreshBtn(){ btn.disabled = !(sel.value && ta.value.trim()); }
+      sel.addEventListener('change', refreshBtn);
+      ta.addEventListener('input', refreshBtn);
+      btn.addEventListener('click', function(){
+        var qi = state.queue.findIndex(function(x){return x.id===id;});
+        if(qi===-1) return;
+        var q = state.queue[qi];
+        state.faqs.push({id:uid('f'), category:sel.value, question:q.question, answer:ta.value.trim(), askedCount:q.askedCount, dateLabel:todayLabel()});
+        state.queue.splice(qi,1);
+        saveState();
+        lastResult = null;
+        renderTeam();
+        renderMitarbeiter();
+      });
+    });
+
+    el.querySelectorAll('[data-del]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var id = b.getAttribute('data-del');
+        state.faqs = state.faqs.filter(function(f){ return f.id!==id; });
+        saveState();
+        renderTeam();
+        renderMitarbeiter();
+      });
+    });
+  }
+
+  /* ---------- role switch ---------- */
+  function setRole(role){
+    var m = document.getElementById('viewMitarbeiter');
+    var t = document.getElementById('viewTeam');
+    var bm = document.getElementById('roleMitarbeiter');
+    var bt = document.getElementById('roleTeam');
+    if(role==='mitarbeiter'){
+      m.hidden=false; t.hidden=true; bm.setAttribute('aria-pressed','true'); bt.setAttribute('aria-pressed','false');
+      renderMitarbeiter();
+    } else {
+      m.hidden=true; t.hidden=false; bm.setAttribute('aria-pressed','false'); bt.setAttribute('aria-pressed','true');
+      renderTeam();
+    }
+  }
+
+  document.getElementById('roleMitarbeiter').addEventListener('click', function(){ setRole('mitarbeiter'); });
+  document.getElementById('roleTeam').addEventListener('click', function(){ setRole('team'); });
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    state = JSON.parse(JSON.stringify(SEED));
+    lastResult = null;
+    activeFilter = 'alle';
+    saveState();
+    setRole('mitarbeiter');
+  });
+
+  fillSlot('icon-sprout-slot','sprout');
+  fillSlot('icon-info-slot','info');
+  fillSlot('icon-reset-slot','refresh');
+  fillSlot('icon-role-m','user');
+  fillSlot('icon-role-t','users');
+
+  renderMitarbeiter();
+})();
+</script>
